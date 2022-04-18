@@ -25,4 +25,19 @@ extension EmailActionTypeExtension on EmailActionType {
         return '';
     }
   }
+
+  String getToastMessageMoveToMailboxSuccess(BuildContext context, {String? destinationPath}) {
+    switch(this) {
+      case EmailActionType.moveToMailbox:
+        return AppLocalizations.of(context).moved_to_mailbox(destinationPath ?? '');
+      case EmailActionType.moveToTrash:
+        return AppLocalizations.of(context).moved_to_trash;
+      case EmailActionType.moveToSpam:
+        return AppLocalizations.of(context).marked_as_spam;
+      case EmailActionType.unSpam:
+        return AppLocalizations.of(context).marked_as_not_spam;
+      default:
+        return '';
+    }
+  }
 }

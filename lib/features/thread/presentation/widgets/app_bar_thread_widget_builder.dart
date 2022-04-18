@@ -24,7 +24,7 @@ class AppBarThreadWidgetBuilder {
   final BuildContext _context;
   final ImagePaths _imagePaths;
   final ResponsiveUtils _responsiveUtils;
-  final PresentationMailbox? _presentationMailbox;
+  final PresentationMailbox? _currentMailbox;
   final List<PresentationEmail> _listSelectionEmail;
   final SelectMode _selectMode;
   final FilterMessageOption _filterMessageOption;
@@ -33,7 +33,7 @@ class AppBarThreadWidgetBuilder {
     this._context,
     this._imagePaths,
     this._responsiveUtils,
-    this._presentationMailbox,
+    this._currentMailbox,
     this._listSelectionEmail,
     this._selectMode,
     this._filterMessageOption,
@@ -80,7 +80,7 @@ class AppBarThreadWidgetBuilder {
       if (!_responsiveUtils.isTabletLarge(_context)) _buildMenuButton(),
       if (_responsiveUtils.isTabletLarge(_context)) SizedBox(width: 16),
       Expanded(child: Text(
-          '${_presentationMailbox?.name?.name.capitalizeFirstEach ?? ''}',
+          '${_currentMailbox?.name?.name.capitalizeFirstEach ?? ''}',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontSize: 21, color: Colors.black, fontWeight: FontWeight.bold))),
@@ -107,20 +107,30 @@ class AppBarThreadWidgetBuilder {
           icon: SvgPicture.asset(_listSelectionEmail.isAllEmailStarred ? _imagePaths.icUnStar : _imagePaths.icStar, fit: BoxFit.fill),
           tooltip: _listSelectionEmail.isAllEmailStarred ? AppLocalizations.of(_context).not_starred : AppLocalizations.of(_context).starred,
           onTap: () => _onEmailSelectionAction?.call(
-              _listSelectionEmail.isAllEmailStarred ? EmailActionType.markAsUnStar : EmailActionType.markAsStar,
+              _listSelectionEmail.isAllEmailStarred ? EmailActionType.unMarkAsStarred : EmailActionType.markAsStarred,
               _listSelectionEmail)),
-      buildIconWeb(
-          icon: SvgPicture.asset(_imagePaths.icMove, fit: BoxFit.fill),
-          tooltip: AppLocalizations.of(_context).move,
-          onTap: () => _onEmailSelectionAction?.call(EmailActionType.move, _listSelectionEmail)),
+      if (_currentMailbox?.isDrafts == false)
+        buildIconWeb(
+            icon: SvgPicture.asset(_imagePaths.icMove, fit: BoxFit.fill),
+            tooltip: AppLocalizations.of(_context).move,
+            onTap: () => _onEmailSelectionAction?.call(EmailActionType.moveToMailbox, _listSelectionEmail)),
+      if (_currentMailbox?.isDrafts == false)
+        buildIconWeb(
+            icon: SvgPicture.asset(_currentMailbox?.isSpam == true
+                ? _imagePaths.icNotSpam : _imagePaths.icSpam,
+                fit: BoxFit.fill),
+            tooltip: _currentMailbox?.isSpam == true ? AppLocalizations.of(_context).un_spam : AppLocalizations.of(_context).mark_as_spam,
+            onTap: () => _currentMailbox?.isSpam == true
+                ? _onEmailSelectionAction?.call(EmailActionType.unSpam, _listSelectionEmail)
+                : _onEmailSelectionAction?.call(EmailActionType.moveToSpam, _listSelectionEmail)),
       buildIconWeb(
           icon: SvgPicture.asset(_imagePaths.icDelete, fit: BoxFit.fill),
-          tooltip: _presentationMailbox?.role != PresentationMailbox.roleTrash
+          tooltip: _currentMailbox?.role != PresentationMailbox.roleTrash
               ? AppLocalizations.of(_context).move_to_trash
               : AppLocalizations.of(_context).delete_permanently,
-          onTap: () => _presentationMailbox?.role != PresentationMailbox.roleTrash
-              ? _onEmailSelectionAction?.call(EmailActionType.moveToTrash, _listSelectionEmail)
-              : _onEmailSelectionAction?.call(EmailActionType.deletePermanently, _listSelectionEmail)),
+          onTap: () => _currentMailbox?.isTrash == true
+              ? _onEmailSelectionAction?.call(EmailActionType.deletePermanently, _listSelectionEmail)
+              : _onEmailSelectionAction?.call(EmailActionType.moveToTrash, _listSelectionEmail)),
     ]);
   }
 
@@ -265,7 +275,7 @@ class AppBarThreadWidgetBuilder {
               margin: EdgeInsets.zero,
               constraints: BoxConstraints(maxWidth: _getMaxWidthAppBarTitle()),
               child: Text(
-                '${_presentationMailbox?.name?.name.capitalizeFirstEach ?? ''}',
+                '${_currentMailbox?.name?.name.capitalizeFirstEach ?? ''}',
                 maxLines: 1,
                 overflow: GetPlatform.isWeb ? TextOverflow.clip : TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 21, color: AppColor.colorNameEmail, fontWeight: FontWeight.w700))

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-04-14T15:13:36.565629",
+  "@@last_modified": "2022-04-15T16:53:02.138499",
   "initializing_data": "Initializing data...",
   "@initializing_data": {
     "type": "text",
@@ -214,8 +214,8 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "mark_as_star": "Star",
-  "@mark_as_star": {
+  "mark_as_starred": "Mark as starred",
+  "@mark_as_starred": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -350,12 +350,6 @@
   },
   "undo_action": "UNDO",
   "@undo_action": {
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "mark_as_unstar": "Unstar",
-  "@mark_as_unstar": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -1056,6 +1050,48 @@
   },
   "date": "Date",
   "@date": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "mark_as_spam": "Mark as spam",
+  "@mark_as_spam": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "remove_from_spam": "Remove from spam",
+  "@remove_from_spam": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "marked_as_spam": "Marked as spam",
+  "@marked_as_spam": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "marked_as_not_spam": "Marked as not spam",
+  "@marked_as_not_spam": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "star": "Star",
+  "@star": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "un_star": "Unstar",
+  "@un_star": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "un_spam": "Unspam",
+  "@un_spam": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

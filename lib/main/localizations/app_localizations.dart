@@ -243,10 +243,10 @@ class AppLocalizations {
     );
   }
 
-  String get mark_as_star {
+  String get mark_as_starred {
     return Intl.message(
-      'Star',
-      name: 'mark_as_star',
+      'Mark as starred',
+      name: 'mark_as_starred',
     );
   }
 
@@ -385,13 +385,6 @@ class AppLocalizations {
     return Intl.message(
         'UNDO',
         name: 'undo_action'
-    );
-  }
-
-  String get mark_as_unstar {
-    return Intl.message(
-      'Unstar',
-      name: 'mark_as_unstar',
     );
   }
 
@@ -1109,6 +1102,55 @@ class AppLocalizations {
     return Intl.message(
       'Date',
       name: 'date',
+    );
+  }
+
+  String get mark_as_spam {
+    return Intl.message(
+      'Mark as spam',
+      name: 'mark_as_spam',
+    );
+  }
+
+  String get remove_from_spam {
+    return Intl.message(
+      'Remove from spam',
+      name: 'remove_from_spam',
+    );
+  }
+
+  String get marked_as_spam {
+    return Intl.message(
+      'Marked as spam',
+      name: 'marked_as_spam',
+    );
+  }
+
+  String get marked_as_not_spam {
+    return Intl.message(
+      'Marked as not spam',
+      name: 'marked_as_not_spam',
+    );
+  }
+
+  String get star {
+    return Intl.message(
+      'Star',
+      name: 'star',
+    );
+  }
+
+  String get un_star {
+    return Intl.message(
+      'Unstar',
+      name: 'un_star',
+    );
+  }
+
+  String get un_spam {
+    return Intl.message(
+      'Unspam',
+      name: 'un_spam',
     );
   }
 }
