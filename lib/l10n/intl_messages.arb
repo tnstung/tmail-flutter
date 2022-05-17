@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-04-15T16:53:02.138499",
+  "@@last_modified": "2022-05-06T16:58:28.388035",
   "initializing_data": "Initializing data...",
   "@initializing_data": {
     "type": "text",
@@ -8,6 +8,24 @@
   },
   "login_text_slogan": "Team Mail",
   "@login_text_slogan": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "loginInputUrlMessage": "To login and access your message please connect to your JMAP server",
+  "@loginInputUrlMessage": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "loginInputCredentialMessage": "Enter your credentials to sign in",
+  "@loginInputCredentialMessage": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "next": "Next",
+  "@next": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -36,8 +54,38 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "login_text_login_to_continue": "Please login to continue",
-  "@login_text_login_to_continue": {
+  "signIn": "Sign In",
+  "@signIn": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "jmapBasedMailSolution": "JMAP-based\ncollaborative team mail solution",
+  "@jmapBasedMailSolution": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "jmapStandard": "JMAP standard",
+  "@jmapStandard": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "encryptedMailbox": "Encrypted mailbox",
+  "@encryptedMailbox": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "manageEmailAsATeam": "Manage email as a team",
+  "@manageEmailAsATeam": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "multipleIntegrations": "Multiple integrations",
+  "@multipleIntegrations": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -474,8 +522,8 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "logout": "Logout",
-  "@logout": {
+  "sign_out": "Sign out",
+  "@sign_out": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -1092,6 +1140,138 @@
   },
   "un_spam": "Unspam",
   "@un_spam": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "settings": "Settings",
+  "@settings": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "manage_account": "Manage account",
+  "@manage_account": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "profiles": "Profiles",
+  "@profiles": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "identities": "Identities",
+  "@identities": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "new_identity": "New Identity",
+  "@new_identity": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "name": "Name",
+  "@name": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "reply_to_address": "Reply to address",
+  "@reply_to_address": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "bcc_to_address": "Bcc to address",
+  "@bcc_to_address": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "signature": "Signature",
+  "@signature": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "plain_text": "Plain text",
+  "@plain_text": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "html_template": "Html template",
+  "@html_template": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "create": "Create",
+  "@create": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "you_have_created_a_new_identity": "You have created a new identity",
+  "@you_have_created_a_new_identity": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "all_identities": "All identities",
+  "@all_identities": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "default_value": "Default",
+  "@default_value": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "delete_identity": "Delete identity",
+  "@delete_identity": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "message_confirmation_dialog_delete_identity": "Are you sure you want to delete this identity?",
+  "@message_confirmation_dialog_delete_identity": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "identity_has_been_deleted": "Identity has been deleted",
+  "@identity_has_been_deleted": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "delete_failed": "Delete Failed",
+  "@delete_failed": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "edit_identity": "Edit identity",
+  "@edit_identity": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "you_are_changed_your_identity_successfully": "You’ve changed your identity successfully",
+  "@you_are_changed_your_identity_successfully": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "save": "Save",
+  "@save": {
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

@@ -4,6 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// A builder which builds a reusable slogan widget.
 /// This contains the logo and the slogan text.
 /// The elements are arranged in a column or row.
+
+typedef OnTapCallback = void Function();
+
 class SloganBuilder {
 
   final bool arrangedByHorizontal;
@@ -15,6 +18,8 @@ class SloganBuilder {
   String? _logoSVG;
   String? _logo;
   double? _sizeLogo;
+  OnTapCallback? _onTapCallback;
+  EdgeInsetsGeometry? _padding;
 
   SloganBuilder({this.arrangedByHorizontal = false});
 
@@ -46,23 +51,37 @@ class SloganBuilder {
     _sizeLogo = size;
   }
 
+  void addOnTapCallback(OnTapCallback? onTapCallback) {
+    _onTapCallback = onTapCallback;
+  }
+
+  void setPadding(EdgeInsetsGeometry? padding) {
+    _padding = padding;
+  }
+
   Widget build() {
     if (!arrangedByHorizontal) {
-      return Column(children: [
-        _logoApp(),
-        Padding(
-          padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-          child: Text(_text ?? '', key: _key, style: _textStyle, textAlign: _textAlign),
-        ),
-      ]);
+      return InkWell(
+        onTap: () => _onTapCallback?.call(),
+        child: Column(children: [
+          _logoApp(),
+          Padding(
+            padding: _padding ?? EdgeInsets.only(top: 16, left: 16, right: 16),
+            child: Text(_text ?? '', key: _key, style: _textStyle, textAlign: _textAlign),
+          ),
+        ]),
+      );
     } else {
-      return Row(children: [
-        _logoApp(),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text(_text ?? '', key: _key, style: _textStyle, textAlign: _textAlign),
-        ),
-      ]);
+      return InkWell(
+        onTap: () => _onTapCallback?.call(),
+        child: Row(children: [
+          _logoApp(),
+          Padding(
+            padding: _padding ?? EdgeInsets.symmetric(horizontal: 10),
+            child: Text(_text ?? '', key: _key, style: _textStyle, textAlign: _textAlign),
+          ),
+        ]),
+      );
     }
   }
 

@@ -29,6 +29,18 @@ class AppLocalizations {
         name: 'login_text_slogan');
   }
 
+  String get loginInputUrlMessage {
+    return Intl.message('To login and access your message please connect to your JMAP server', name: 'loginInputUrlMessage');
+  }
+  
+  String get loginInputCredentialMessage {
+    return Intl.message('Enter your credentials to sign in', name: 'loginInputCredentialMessage');
+  }
+  
+  String get next {
+    return Intl.message('Next', name: 'next');
+  }
+
   String get prefix_https {
     return Intl.message('https://',
         name: 'prefix_https');
@@ -49,9 +61,48 @@ class AppLocalizations {
         name: 'login');
   }
 
-  String get login_text_login_to_continue {
-    return Intl.message('Please login to continue',
-        name: 'login_text_login_to_continue');
+  String get signIn {
+    return Intl.message('Sign In',
+        name: 'signIn');
+  }
+
+  String get requiredEmail {
+    return Intl.message('Email is required',
+        name: 'requiredEmail');
+  }
+
+  String get requiredPassword {
+    return Intl.message('Password is required',
+        name: 'requiredPassword');
+  }
+
+  String get requiredUrl {
+    return Intl.message('Server address is required',
+        name: 'requiredUrl');
+  }
+
+  String get jmapBasedMailSolution {
+    return Intl.message('JMAP-based\ncollaborative team mail solution',
+        name: 'jmapBasedMailSolution');
+  }
+
+  String get jmapStandard {
+    return Intl.message('JMAP standard',
+        name: 'jmapStandard');
+  }
+
+  String get encryptedMailbox {
+    return Intl.message('Encrypted mailbox',
+      name: 'encryptedMailbox');
+  }
+
+  String get manageEmailAsATeam {
+    return Intl.message('Manage email as a team',
+      name: 'manageEmailAsATeam');
+  }
+
+  String get multipleIntegrations {
+    return Intl.message('Multiple integrations', name: 'multipleIntegrations');
   }
 
   String get unknown_error_login_message {
@@ -506,9 +557,9 @@ class AppLocalizations {
     );
   }
 
-  String get logout {
-    return Intl.message('Logout',
-        name: 'logout');
+  String get sign_out {
+    return Intl.message('Sign out',
+        name: 'sign_out');
   }
 
   String get hint_search_mailboxes {
@@ -1152,5 +1203,127 @@ class AppLocalizations {
       'Unspam',
       name: 'un_spam',
     );
+  }
+
+  String get settings {
+    return Intl.message('Settings',
+        name: 'settings');
+  }
+
+  String get manage_account {
+    return Intl.message('Manage account',
+        name: 'manage_account');
+  }
+
+  String get profiles {
+    return Intl.message('Profiles',
+        name: 'profiles');
+  }
+
+  String get identities {
+    return Intl.message('Identities',
+        name: 'identities');
+  }
+
+  String get new_identity {
+    return Intl.message('New Identity',
+        name: 'new_identity');
+  }
+
+  String get name {
+    return Intl.message(
+        'Name',
+        name: 'name');
+  }
+
+  String get reply_to_address {
+    return Intl.message(
+        'Reply to address',
+        name: 'reply_to_address');
+  }
+
+  String get bcc_to_address {
+    return Intl.message(
+        'Bcc to address',
+        name: 'bcc_to_address');
+  }
+
+  String get signature {
+    return Intl.message(
+        'Signature',
+        name: 'signature');
+  }
+
+  String get plain_text {
+    return Intl.message(
+        'Plain text',
+        name: 'plain_text');
+  }
+
+  String get html_template {
+    return Intl.message(
+        'Html template',
+        name: 'html_template');
+  }
+
+  String get create {
+    return Intl.message(
+        'Create',
+        name: 'create');
+  }
+
+  String get you_have_created_a_new_identity {
+    return Intl.message(
+        'You have created a new identity',
+        name: 'you_have_created_a_new_identity');
+  }
+
+  String get all_identities {
+    return Intl.message(
+        'All identities',
+        name: 'all_identities');
+  }
+
+  String get default_value {
+    return Intl.message(
+      'Default',
+      name: 'default_value',
+    );
+  }
+
+  String get delete_identity {
+    return Intl.message('Delete identity',
+        name: 'delete_identity');
+  }
+
+  String get message_confirmation_dialog_delete_identity {
+    return Intl.message('Are you sure you want to delete this identity?',
+        name: 'message_confirmation_dialog_delete_identity');
+  }
+
+  String get identity_has_been_deleted {
+    return Intl.message('Identity has been deleted',
+        name: 'identity_has_been_deleted');
+  }
+
+  String get delete_failed {
+    return Intl.message('Delete Failed',
+        name: 'delete_failed');
+  }
+
+  String get edit_identity {
+    return Intl.message('Edit identity',
+        name: 'edit_identity');
+  }
+
+  String get you_are_changed_your_identity_successfully {
+    return Intl.message('You’ve changed your identity successfully',
+        name: 'you_are_changed_your_identity_successfully');
+  }
+
+  String get save {
+    return Intl.message(
+        'Save',
+        name: 'save');
   }
 }

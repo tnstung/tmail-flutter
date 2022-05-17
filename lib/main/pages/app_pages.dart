@@ -7,13 +7,18 @@ import 'package:tmail_ui_user/features/destination_picker/presentation/destinati
 import 'package:tmail_ui_user/features/email/presentation/email_view.dart' deferred as email;
 import 'package:tmail_ui_user/features/home/presentation/home_bindings.dart';
 import 'package:tmail_ui_user/features/home/presentation/home_view.dart';
+import 'package:tmail_ui_user/features/identity_creator/presentation/identity_creator_bindings.dart';
 import 'package:tmail_ui_user/features/login/presentation/login_bindings.dart';
-import 'package:tmail_ui_user/features/login/presentation/login_view.dart' deferred as login;
+import 'package:tmail_ui_user/features/login/presentation/login_view.dart'
+  if (dart.library.html) 'package:tmail_ui_user/features/login/presentation/login_view_web.dart' deferred as login;
 import 'package:tmail_ui_user/features/mailbox_creator/presentation/mailbox_creator_bindings.dart';
 import 'package:tmail_ui_user/features/mailbox_creator/presentation/mailbox_creator_view.dart' deferred as mailbox_creator;
+import 'package:tmail_ui_user/features/identity_creator/presentation/identity_creator_view.dart' deferred as identity_creator;
 import 'package:tmail_ui_user/features/mailbox_dashboard/presentation/mailbox_dashboard_bindings.dart';
 import 'package:tmail_ui_user/features/mailbox_dashboard/presentation/mailbox_dashboard_view.dart'
-  if (dart.library.html) 'package:tmail_ui_user/features/mailbox_dashboard/presentation/mailbox_dashboard_view_web.dart' deferred as mailbox_dashBoard;
+  if (dart.library.html) 'package:tmail_ui_user/features/mailbox_dashboard/presentation/mailbox_dashboard_view_web.dart' deferred as mailbox_dashboard;
+import 'package:tmail_ui_user/features/manage_account/presentation/manage_account_dashboard_bindings.dart';
+import 'package:tmail_ui_user/features/manage_account/presentation/manage_account_dashboard_view.dart' deferred as manage_account_dashboard;
 import 'package:tmail_ui_user/features/session/presentation/session_page_bindings.dart';
 import 'package:tmail_ui_user/features/session/presentation/session_view.dart' deferred as session;
 import 'package:tmail_ui_user/main/pages/deferred_widget.dart';
@@ -35,7 +40,7 @@ class AppPages {
       binding: SessionPageBindings()),
     GetPage(
       name: AppRoutes.MAILBOX_DASHBOARD,
-      page: () => DeferredWidget(mailbox_dashBoard.loadLibrary, () => mailbox_dashBoard.MailboxDashBoardView()),
+      page: () => DeferredWidget(mailbox_dashboard.loadLibrary, () => mailbox_dashboard.MailboxDashBoardView()),
       binding: MailboxDashBoardBindings()),
     GetPage(
       name: AppRoutes.EMAIL,
@@ -43,8 +48,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.COMPOSER,
       opaque: false,
-      page: () => DeferredWidget(composer.loadLibrary, () => composer.ComposerView()),
-      binding: ComposerBindings()),
+      page: () {
+        ComposerBindings().dependencies();
+        return DeferredWidget(composer.loadLibrary, () => composer.ComposerView());
+      }),
     GetPage(
       name: AppRoutes.DESTINATION_PICKER,
       opaque: false,
@@ -55,5 +62,14 @@ class AppPages {
       opaque: false,
       page: () => DeferredWidget(mailbox_creator.loadLibrary, () => mailbox_creator.MailboxCreatorView()),
       binding: MailboxCreatorBindings()),
+    GetPage(
+      name: AppRoutes.MANAGE_ACCOUNT,
+      page: () => DeferredWidget(manage_account_dashboard.loadLibrary, () => manage_account_dashboard.ManageAccountDashBoardView()),
+      binding: ManageAccountDashBoardBindings()),
+    GetPage(
+      name: AppRoutes.IDENTITY_CREATOR,
+      opaque: false,
+      page: () => DeferredWidget(identity_creator.loadLibrary, () => identity_creator.IdentityCreatorView()),
+      binding: IdentityCreatorBindings()),
   ];
 }

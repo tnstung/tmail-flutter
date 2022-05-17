@@ -1,5 +1,7 @@
 
 import 'package:core/core.dart';
+import 'package:dartz/dartz.dart' as dartz;
+import 'package:flutter/foundation.dart';
 import 'package:jmap_dart_client/jmap/account_id.dart';
 import 'package:jmap_dart_client/jmap/core/filter/filter.dart';
 import 'package:jmap_dart_client/jmap/core/properties/properties.dart';
@@ -20,6 +22,7 @@ import 'package:tmail_ui_user/features/thread/data/datasource/thread_datasource.
 import 'package:tmail_ui_user/features/thread/data/model/email_change_response.dart';
 import 'package:tmail_ui_user/features/thread/domain/constants/thread_constants.dart';
 import 'package:tmail_ui_user/features/thread/domain/model/email_response.dart';
+import 'package:tmail_ui_user/features/thread/domain/model/get_email_request.dart';
 import 'package:tmail_ui_user/features/thread/domain/repository/thread_repository.dart';
 
 class ThreadRepositoryImpl extends ThreadRepository {
@@ -141,22 +144,27 @@ class ThreadRepositoryImpl extends ThreadRepository {
     List<Email>? emailCacheList
   }) async {
     if (emailUpdated != null && emailUpdated.isNotEmpty) {
-      final newEmailUpdated = emailUpdated.map((email) {
-        if (updatedProperties == null) {
-          return email;
-        } else {
-          final emailOld = emailCacheList?.findEmailById(email.id);
-          if (emailOld != null) {
-            return emailOld.combineEmail(email, updatedProperties);
-          } else {
-            return email;
-          }
-        }
-      }).toList();
+      if (updatedProperties == null) {
+        return null;
+      }
+      final newEmailUpdated = emailUpdated
+        .map((updatedEmail) => _combineUpdatedWithEmailInCache(updatedEmail, emailCacheList))
+        .where((tuple) => tuple.value2 != null)
+        .map((tuple) => tuple.value2!.combineEmail(tuple.value1, updatedProperties))
+        .toList();
 
       return newEmailUpdated;
     }
     return emailUpdated;
+  }
+
+  dartz.Tuple2<Email, Email?> _combineUpdatedWithEmailInCache(Email updatedEmail, List<Email>? emailCacheList) {
+    final emailOld = emailCacheList?.findEmailById(updatedEmail.id);
+    if (emailOld != null) {
+      return dartz.Tuple2(updatedEmail, emailOld);
+    } else {
+      return dartz.Tuple2(updatedEmail, null);
+    }
   }
 
   Future<void> _updateEmailCache({
@@ -187,6 +195,7 @@ class ThreadRepositoryImpl extends ThreadRepository {
         FilterMessageOption? filterOption,
       }
   ) async* {
+    log('ThreadRepositoryImpl::refreshChanges(): $currentState');
     final localEmailList = await mapDataSource[DataSourceType.local]!.getAllEmailCache(
       inMailboxId: inMailboxId,
       sort: sort,
@@ -240,34 +249,31 @@ class ThreadRepositoryImpl extends ThreadRepository {
   }
 
   @override
-  Stream<EmailsResponse> loadMoreEmails(
-    AccountId accountId,
-    {
-      int? position,
-      UnsignedInt? limit,
-      Set<Comparator>? sort,
-      Filter? filter,
-      Properties? properties,
-      EmailId? lastEmailId,
-    }
-  ) async* {
-    log('ThreadRepositoryImpl::loadMoreEmails()');
-    final emailResponse = await mapDataSource[DataSourceType.network]!.getAllEmail(
-      accountId,
-      limit: limit,
-      sort: sort,
-      filter: filter,
-      properties: properties);
+  Stream<EmailsResponse> loadMoreEmails(GetEmailRequest emailRequest) async* {
+    bench.start('loadMoreEmails in computed');
+    final response = await compute(_getAllEmailsWithoutLastEmailId, emailRequest);
+    bench.end('loadMoreEmails in computed');
+    await _updateEmailCache(newCreated: response.emailList);
+    yield response;
+  }
 
-    final newEmailList = emailResponse.emailList != null && emailResponse.emailList!.isNotEmpty
-      ? emailResponse.emailList!.where((email) => email.id != lastEmailId).toList()
-      : <Email>[];
+  Future<EmailsResponse> _getAllEmailsWithoutLastEmailId(GetEmailRequest emailRequest) async {
+    final emailResponse = await mapDataSource[DataSourceType.network]!
+        .getAllEmail(
+            emailRequest.accountId,
+            limit: emailRequest.limit,
+            sort: emailRequest.sort,
+            filter: emailRequest.filter,
+            properties: emailRequest.properties)
+        .then((response) {
+            var listEmails = response.emailList;
+            if (listEmails != null && listEmails.isNotEmpty) {
+              listEmails = listEmails.where((email) => email.id != emailRequest.lastEmailId).toList();
+            }
+            return EmailsResponse(emailList: listEmails, state: response.state);
+        });
 
-    if (newEmailList.isNotEmpty) {
-      await _updateEmailCache(newCreated: newEmailList);
-    }
-
-    yield EmailsResponse(emailList: newEmailList, state: emailResponse.state);
+    return emailResponse;
   }
 
   @override
@@ -291,42 +297,6 @@ class ThreadRepositoryImpl extends ThreadRepository {
   }
 
   @override
-  Stream<EmailsResponse> refreshAll(
-      AccountId accountId,
-      {
-        UnsignedInt? limit,
-        Set<Comparator>? sort,
-        EmailFilter? emailFilter,
-        Properties? propertiesCreated,
-        Properties? propertiesUpdated,
-      }
-  ) async* {
-    EmailsResponse? networkEmailResponse = await mapDataSource[DataSourceType.network]!.getAllEmail(
-        accountId,
-        limit: limit,
-        sort: sort,
-        filter: emailFilter?.filter,
-        properties: propertiesCreated);
-
-    await _updateEmailCache(newCreated: networkEmailResponse.emailList);
-    if (networkEmailResponse.state != null) {
-      await _updateState(networkEmailResponse.state!);
-    }
-
-    final newEmailResponse = await Future.wait([
-      mapDataSource[DataSourceType.local]!.getAllEmailCache(
-          inMailboxId: emailFilter?.mailboxId,
-          sort: sort,
-          filterOption: emailFilter?.filterOption),
-      stateDataSource.getState(StateType.email)
-    ]).then((List response) {
-      return EmailsResponse(emailList: response.first, state: response.last);
-    });
-
-    yield newEmailResponse;
-  }
-
-  @override
   Future<bool> emptyTrashFolder(AccountId accountId, MailboxId trashMailboxId) async {
     var finalResult = true;
     var hasEmails = true;
@@ -336,7 +306,7 @@ class ThreadRepositoryImpl extends ThreadRepository {
 
       final emailsResponse = await mapDataSource[DataSourceType.network]!.getAllEmail(
           accountId,
-          sort: Set()
+          sort: <Comparator>{}
             ..add(EmailComparator(EmailComparatorProperty.receivedAt)
               ..setIsAscending(false)),
           filter: EmailFilterCondition(inMailbox: trashMailboxId, before: lastEmail?.receivedAt),

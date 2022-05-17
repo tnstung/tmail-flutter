@@ -92,6 +92,26 @@ class ImagePaths {
   String get icToastNotSpam => _getImagePath('ic_toast_not_spam.svg');
   String get icNotSpam => _getImagePath('ic_not_spam.svg');
   String get icAvatarSpam => _getImagePath('ic_avatar_spam.svg');
+  String get icLogout => _getImagePath('ic_logout.svg');
+  String get icSetting => _getImagePath('ic_setting.svg');
+  String get icProfiles => _getImagePath('ic_profiles.svg');
+  String get icAddIdentity => _getImagePath('ic_add_identity.svg');
+  String get icDropDown => _getImagePath('ic_dropdown.svg');
+  String get icMoreVertical => _getImagePath('ic_more_vertical.svg');
+  String get icEmail => _getImagePath('ic_email.svg');
+  String get icReplyTo => _getImagePath('ic_reply_to.svg');
+  String get icEditIdentity => _getImagePath('ic_edit_identity.svg');
+  String get icDeleteDialogIdentity => _getImagePath('ic_delete_dialog_identity.svg');
+  String get icDeleteDialogFailed => _getImagePath('ic_delete_dialog_failed.svg');
+  String get icEdit => _getImagePath('ic_edit.svg');
+  String get icEye => _getImagePath('ic_eye.svg');
+  String get icEyeOff => _getImagePath('ic_eye_off.svg');
+  String get icJMAPStandard => _getImagePath('ic_jmap_standard.svg');
+  String get icEncrypted => _getImagePath('ic_encrypted.svg');
+  String get icIntegration => _getImagePath('ic_integration.svg');
+  String get icTeam => _getImagePath('ic_team.svg');
+  String get loginGraphic => _getImagePath('login_graphic.png');
+  String get icPowerByLinagora => _getImagePath('power_by_linagora.svg');
 
   String _getImagePath(String imageName) {
     return AssetsPaths.images + imageName;

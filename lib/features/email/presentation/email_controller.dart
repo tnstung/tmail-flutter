@@ -35,9 +35,9 @@ import 'package:tmail_ui_user/features/email/presentation/model/composer_argumen
 import 'package:tmail_ui_user/features/email/presentation/widgets/email_address_bottom_sheet_builder.dart';
 import 'package:tmail_ui_user/features/email/presentation/widgets/email_address_dialog_builder.dart';
 import 'package:tmail_ui_user/features/mailbox/presentation/model/mailbox_actions.dart';
+import 'package:tmail_ui_user/features/mailbox_dashboard/presentation/action/dashboard_action.dart';
 import 'package:tmail_ui_user/features/mailbox_dashboard/presentation/mailbox_dashboard_controller.dart';
 import 'package:tmail_ui_user/features/composer/presentation/extensions/email_action_type_extension.dart';
-import 'package:tmail_ui_user/features/mailbox_dashboard/presentation/model/dashboard_action.dart';
 import 'package:tmail_ui_user/features/thread/presentation/model/delete_action_type.dart';
 import 'package:tmail_ui_user/main/localizations/app_localizations.dart';
 import 'package:tmail_ui_user/main/routes/app_routes.dart';
@@ -68,6 +68,8 @@ class EmailController extends BaseController {
   EmailId? _currentEmailId;
   List<EmailContent>? initialEmailContents;
 
+  late Worker emailWorker;
+
   PresentationMailbox? get currentMailbox => mailboxDashBoardController.selectedMailbox.value;
 
   PresentationEmail? get currentEmail => mailboxDashBoardController.selectedEmail.value;
@@ -85,12 +87,22 @@ class EmailController extends BaseController {
 
   @override
   void onInit() {
-    mailboxDashBoardController.selectedEmail.listen((presentationEmail) {
-      log('EmailController::onReady(): ${presentationEmail.toString()}');
-      if (_currentEmailId != presentationEmail?.id) {
-        _currentEmailId = presentationEmail?.id;
-        _resetToOriginalValue();
-        if (presentationEmail != null) {
+    _initWorker();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _clearWorker();
+    super.onClose();
+  }
+
+  void _initWorker() {
+    emailWorker = ever( mailboxDashBoardController.selectedEmail, (presentationEmail) {
+      if (presentationEmail is PresentationEmail) {
+        if (_currentEmailId != presentationEmail.id) {
+          _currentEmailId = presentationEmail.id;
+          _resetToOriginalValue();
           _getEmailContentAction(presentationEmail.id);
           if (!presentationEmail.hasRead) {
             markAsEmailRead(presentationEmail, ReadActions.markAsRead);
@@ -98,13 +110,10 @@ class EmailController extends BaseController {
         }
       }
     });
-    super.onInit();
   }
 
-  @override
-  void onClose() {
-    mailboxDashBoardController.selectedEmail.close();
-    super.onClose();
+  void _clearWorker() {
+    emailWorker.call();
   }
 
   void _getEmailContentAction(EmailId emailId) async {
@@ -113,11 +122,6 @@ class EmailController extends BaseController {
     if (accountId != null && baseDownloadUrl != null) {
       consumeState(_getEmailContentInteractor.execute(accountId, emailId, baseDownloadUrl));
     }
-  }
-
-  @override
-  void onData(Either<Failure, Success> newState) {
-    super.onData(newState);
   }
 
   @override
@@ -271,7 +275,7 @@ class EmailController extends BaseController {
           context: context,
           builder: (_) =>
               PointerInterceptor(child: (DownloadingFileDialogBuilder()
-                    ..key(Key('downloading_file_dialog'))
+                    ..key(const Key('downloading_file_dialog'))
                     ..title(AppLocalizations.of(context).preparing_to_export)
                     ..content(AppLocalizations.of(context).downloading_file(attachment.name ?? ''))
                     ..actionText(AppLocalizations.of(context).cancel)
@@ -285,7 +289,7 @@ class EmailController extends BaseController {
           context: context,
           builder: (_) =>
               PointerInterceptor(child: (DownloadingFileDialogBuilder()
-                  ..key(Key('downloading_file_for_web_dialog'))
+                  ..key(const Key('downloading_file_for_web_dialog'))
                   ..title(AppLocalizations.of(context).preparing_to_save)
                   ..content(AppLocalizations.of(context).downloading_file(attachment.name ?? '')))
                 .build()));
@@ -301,7 +305,7 @@ class EmailController extends BaseController {
   }
 
   void _exportAttachmentFailureAction(Failure failure) {
-    if (failure is ExportAttachmentFailure && !(failure.exception is CancelDownloadFileException)) {
+    if (failure is ExportAttachmentFailure && failure.exception is! CancelDownloadFileException) {
       popBack();
     }
   }
@@ -510,7 +514,7 @@ class EmailController extends BaseController {
   }
 
   void openEmailAddressDialog(BuildContext context, EmailAddress emailAddress) {
-    if (responsiveUtils.isMobile(context) || responsiveUtils.isMobileDevice(context)) {
+    if (responsiveUtils.isScreenWithShortestSide(context)) {
       (EmailAddressBottomSheetBuilder(context, imagePaths, emailAddress)
           ..addOnCloseContextMenuAction(() => popBack())
           ..addOnCopyEmailAddressAction((emailAddress) => copyEmailAddress(context, emailAddress))
@@ -546,8 +550,8 @@ class EmailController extends BaseController {
         emailAddress: emailAddress,
         mailboxRole: mailboxDashBoardController.selectedMailbox.value?.role);
     if (kIsWeb) {
-      if (mailboxDashBoardController.dashBoardAction != DashBoardAction.compose) {
-        mailboxDashBoardController.dispatchDashBoardAction(DashBoardAction.compose, arguments: arguments);
+      if (mailboxDashBoardController.dashBoardAction.value is! ComposeEmailAction) {
+        mailboxDashBoardController.dispatchAction(ComposeEmailAction(arguments: arguments));
       }
     } else {
       push(AppRoutes.COMPOSER, arguments: arguments);
@@ -565,8 +569,8 @@ class EmailController extends BaseController {
           emailAddress: emailAddress,
           mailboxRole: mailboxDashBoardController.selectedMailbox.value?.role);
       if (kIsWeb) {
-        if (mailboxDashBoardController.dashBoardAction != DashBoardAction.compose) {
-          mailboxDashBoardController.dispatchDashBoardAction(DashBoardAction.compose, arguments: arguments);
+        if (mailboxDashBoardController.dashBoardAction.value is! ComposeEmailAction) {
+          mailboxDashBoardController.dispatchAction(ComposeEmailAction(arguments: arguments));
         }
         if (Get.currentRoute == AppRoutes.EMAIL) {
           popBack();
@@ -589,12 +593,12 @@ class EmailController extends BaseController {
           context: context,
           barrierColor: AppColor.colorDefaultCupertinoActionSheet,
           builder: (BuildContext context) => PointerInterceptor(child: (ConfirmDialogBuilder(imagePaths)
-              ..key(Key('confirm_dialog_delete_email_permanently'))
+              ..key(const Key('confirm_dialog_delete_email_permanently'))
               ..title(DeleteActionType.single.getTitleDialog(context))
               ..content(DeleteActionType.single.getContentDialog(context))
               ..addIcon(SvgPicture.asset(imagePaths.icRemoveDialog, fit: BoxFit.fill))
               ..colorConfirmButton(AppColor.colorConfirmActionDialog)
-              ..styleTextConfirmButton(TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: AppColor.colorActionDeleteConfirmDialog))
+              ..styleTextConfirmButton(const TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: AppColor.colorActionDeleteConfirmDialog))
               ..onCloseButtonAction(() => popBack())
               ..onConfirmButtonAction(DeleteActionType.single.getConfirmActionName(context), () => _deleteEmailPermanentlyAction(context, email))
               ..onCancelButtonAction(AppLocalizations.of(context).cancel, () => popBack()))
@@ -629,8 +633,8 @@ class EmailController extends BaseController {
           mailboxRole: mailboxDashBoardController.selectedMailbox.value?.role);
 
       if (kIsWeb) {
-        if (mailboxDashBoardController.dashBoardAction != DashBoardAction.compose) {
-          mailboxDashBoardController.dispatchDashBoardAction(DashBoardAction.compose, arguments: arguments);
+        if (mailboxDashBoardController.dashBoardAction.value is! ComposeEmailAction) {
+          mailboxDashBoardController.dispatchAction(ComposeEmailAction(arguments: arguments));
         }
         if (Get.currentRoute == AppRoutes.EMAIL) {
           popBack();
@@ -643,8 +647,8 @@ class EmailController extends BaseController {
 
   void composeEmailAction() {
     if (kIsWeb) {
-      if (mailboxDashBoardController.dashBoardAction != DashBoardAction.compose) {
-        mailboxDashBoardController.dispatchDashBoardAction(DashBoardAction.compose, arguments: ComposerArguments());
+      if (mailboxDashBoardController.dashBoardAction.value is! ComposeEmailAction) {
+        mailboxDashBoardController.dispatchAction(ComposeEmailAction(arguments: ComposerArguments()));
       }
       if (Get.currentRoute == AppRoutes.EMAIL) {
         popBack();

@@ -26,6 +26,9 @@ export 'presentation/utils/html_transformer/transform_configuration.dart';
 export 'presentation/utils/html_transformer/dom/add_tooltip_link_transformers.dart';
 export 'data/utils/device_manager.dart';
 export 'utils/app_logger.dart';
+export 'utils/benchmark.dart';
+export 'utils/fps_manager.dart';
+export 'utils/build_utils.dart';
 
 // Views
 export 'presentation/views/text/slogan_builder.dart';
@@ -39,7 +42,6 @@ export 'presentation/views/button/button_builder.dart';
 export 'presentation/views/button/icon_button_web.dart';
 export 'presentation/views/image/avatar_builder.dart';
 export 'presentation/views/list/sliver_grid_delegate_fixed_height.dart';
-export 'presentation/views/text/text_form_field_builder.dart';
 export 'presentation/views/image/icon_builder.dart';
 export 'presentation/views/context_menu/context_menu_action_builder.dart';
 export 'presentation/views/context_menu/context_menu_builder.dart';
@@ -58,6 +60,8 @@ export 'presentation/views/bottom_popup/cupertino_action_sheet_builder.dart';
 export 'presentation/views/bottom_popup/confirmation_dialog_action_sheet_builder.dart';
 export 'presentation/views/modal_sheets/edit_text_modal_sheet_builder.dart';
 export 'presentation/views/search/search_bar_view.dart';
+export 'presentation/views/popup_menu/popup_menu_item_widget.dart';
+export 'presentation/views/tab_bar/custom_tab_indicator.dart';
 
 // Resources
 export 'presentation/resources/assets_paths.dart';

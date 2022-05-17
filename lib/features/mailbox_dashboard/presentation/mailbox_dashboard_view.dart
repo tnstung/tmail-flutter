@@ -5,10 +5,10 @@ import 'package:tmail_ui_user/features/base/mixin/network_connection_mixin.dart'
 import 'package:tmail_ui_user/features/composer/presentation/composer_view.dart';
 import 'package:tmail_ui_user/features/email/presentation/email_view.dart';
 import 'package:tmail_ui_user/features/mailbox/presentation/mailbox_view.dart';
+import 'package:tmail_ui_user/features/mailbox_dashboard/presentation/action/dashboard_action.dart';
 import 'package:tmail_ui_user/features/mailbox_dashboard/presentation/mailbox_dashboard_controller.dart';
-import 'package:tmail_ui_user/features/mailbox_dashboard/presentation/model/dashboard_action.dart';
-import 'package:tmail_ui_user/features/setting/presentation/model/app_setting.dart';
-import 'package:tmail_ui_user/features/setting/presentation/model/reading_pane.dart';
+import 'package:tmail_ui_user/features/manage_account/presentation/model/app_setting.dart';
+import 'package:tmail_ui_user/features/manage_account/presentation/model/reading_pane.dart';
 import 'package:tmail_ui_user/features/thread/presentation/thread_view.dart';
 import 'package:tmail_ui_user/main/routes/app_routes.dart';
 
@@ -16,39 +16,43 @@ class MailboxDashBoardView extends GetWidget<MailboxDashBoardController> with Ne
 
   final _responsiveUtils = Get.find<ResponsiveUtils>();
 
+  MailboxDashBoardView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: controller.scaffoldKey,
       drawer: ResponsiveWidget(
         responsiveUtils: _responsiveUtils,
-        mobile: _responsiveUtils.isPortrait(context)
-            ? SizedBox(child: MailboxView(), width: double.infinity)
-            : SizedBox(child: MailboxView(), width: _responsiveUtils.defaultSizeDrawerWidthMobileTablet),
-        tablet: SizedBox(child: MailboxView(), width: _responsiveUtils.defaultSizeDrawerWidthMobileTablet),
-        tabletLarge: SizedBox.shrink(),
-        desktop: SizedBox.shrink()
+        mobile: SizedBox(child: MailboxView(), width: double.infinity),
+        landscapeMobile: SizedBox(child: MailboxView(), width: _responsiveUtils.defaultSizeDrawer),
+        tablet: SizedBox(child: MailboxView(), width: _responsiveUtils.defaultSizeDrawer),
+        tabletLarge: const SizedBox.shrink(),
+        desktop: const SizedBox.shrink(),
       ),
-      drawerEnableOpenDragGesture: _responsiveUtils.isMobile(context) || _responsiveUtils.isTablet(context),
+      drawerEnableOpenDragGesture: _responsiveUtils.isMobile(context)
+          || _responsiveUtils.isLandscapeMobile(context)
+          || _responsiveUtils.isTablet(context),
       body: Stack(children: [
         ResponsiveWidget(
           responsiveUtils: _responsiveUtils,
           desktop: _buildLargeScreenView(context),
           tabletLarge: _buildLargeScreenView(context),
           tablet: ThreadView(),
-          mobile: ThreadView()
+          landscapeMobile: ThreadView(),
+          mobile: ThreadView(),
         ),
-        Obx(() => controller.dashBoardAction == DashBoardAction.compose
+        Obx(() => controller.dashBoardAction.value is ComposeEmailAction
           ? ComposerView()
-          : SizedBox.shrink()),
+          : const SizedBox.shrink()),
         Obx(() => controller.isNetworkConnectionAvailable()
-          ? SizedBox.shrink()
+          ? const SizedBox.shrink()
           : Align(alignment: Alignment.bottomCenter, child: buildNetworkConnectionWidget(context))),
       ]),
     );
   }
 
-  Widget _buildThreadAndEmailContainer(BuildContext context) {
+  Widget _wrapContainerForThreadAndEmail(BuildContext context) {
     switch(AppSetting.readingPane) {
       case ReadingPane.noSplit:
         return Obx(() {
@@ -58,7 +62,7 @@ class MailboxDashBoardView extends GetWidget<MailboxDashBoardController> with Ne
             case AppRoutes.EMAIL:
               return EmailView();
             default:
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
           }
         });
       case ReadingPane.rightOfInbox:
@@ -80,25 +84,23 @@ class MailboxDashBoardView extends GetWidget<MailboxDashBoardController> with Ne
           );
         }
       default:
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
     }
   }
 
   Widget _buildLargeScreenView(BuildContext context) {
     if (controller.isDrawerOpen && (_responsiveUtils.isDesktop(context) || _responsiveUtils.isTabletLarge(context))) {
       WidgetsBinding.instance?.addPostFrameCallback((_) {
-        controller.closeDrawer();
+        controller.closeMailboxMenuDrawer();
       });
     }
 
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(child: MailboxView(), width: _responsiveUtils.defaultSizeDrawerWidthMobileTablet),
-          Expanded(child: _buildThreadAndEmailContainer(context))
-        ],
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(child: MailboxView(), width: _responsiveUtils.defaultSizeDrawer),
+        Expanded(child: _wrapContainerForThreadAndEmail(context))
+      ],
     );
   }
 }

@@ -55,6 +55,8 @@ export 'extensions/media_type_extension.dart';
 export 'extensions/list_attachment_extension.dart';
 export 'extensions/list_presentation_email_extension.dart';
 export 'extensions/list_email_content_extension.dart';
+export 'extensions/list_identities_extension.dart';
+export 'extensions/identity_extension.dart';
 
 // Download
 export 'download/download_task_id.dart';
@@ -67,3 +69,9 @@ export 'contact/device_contact.dart';
 export 'upload/file_info.dart';
 export 'upload/upload_request.dart';
 export 'upload/upload_response.dart';
+
+// AutoComplete
+export 'autocomplete/auto_complete_pattern.dart';
+
+// Identity
+export 'identity/identity_request_dto.dart';

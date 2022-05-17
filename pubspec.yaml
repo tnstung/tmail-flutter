@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 0.3.3
 
 environment:
   sdk: ">=2.14.0 <3.0.0"
@@ -32,6 +32,9 @@ dependencies:
 
   model:
     path: model
+
+  contact:
+    path: contact
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -122,13 +125,14 @@ dependencies:
   # enough_html_editor: Compose email for Mobile & Tablet
   enough_html_editor:
     git:
-      url: https://github.com/Enough-Software/enough_html_editor.git
+      url: https://github.com/dab246/enough_html_editor.git
+      ref: improvements_for_use_tmail
 
   # html_editor_enhanced: Compose email for Web Browser
   html_editor_enhanced:
     git:
       url: https://github.com/dab246/html-editor-enhanced.git
-      ref: fix_display_content
+      ref: improvements_for_use_tmail
 
   # fk_user_agent
   fk_user_agent: 2.1.0
@@ -143,6 +147,10 @@ dependencies:
 
   receive_sharing_intent: 1.4.5
 
+  dropdown_button2: 1.4.0
+
+  flutter_staggered_grid_view: 0.6.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -152,6 +160,8 @@ dev_dependencies:
   mockito: 5.0.17
 
   hive_generator: 1.1.1
+
+  flutter_lints: 1.0.4
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

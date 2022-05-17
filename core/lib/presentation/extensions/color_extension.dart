@@ -10,9 +10,15 @@ extension AppColor on Color {
   static const textFieldTextColor = Color(0xFF7E869B);
   static const textFieldLabelColor = Color(0xFF7E869B);
   static const textFieldHintColor = Color(0xFF757575);
-  static const textFieldBorderColor = Color(0xfff2f1fd);
-  static const textFieldFocusedBorderColor = Color(0xFF837DFF);
-  static const textFieldErrorBorderColor = Color(0xffFF5858);
+  static const textFieldBorderColor = Color(0xfff2f3f5);
+  static const textFieldFocusedBorderColor = Color(0xFF007AFF);
+  static const loginTextFieldBorderColor = Color(0xFFF2F3F5);
+  static const textFieldErrorBorderColor = Color(0xffE64646);
+  static const loginTextFieldErrorBorder = Color(0xffE64646);
+  static const loginTextFieldFocusedBorder = Color(0xFF007AFF);
+  static const loginTextFieldHintColor = Color(0xff818C99);
+  static const loginTextFieldBackgroundColor = Color(0xFFF2F3F5);
+  static const loginTextFieldBackgroundErrorColor = Color(0xFFFAEBEB);
   static const buttonColor = Color(0xFF837DFF);
   static const appColor = Color(0xFF3840F7);
   static const nameUserColor = Color(0xFF182952);
@@ -107,9 +113,12 @@ extension AppColor on Color {
   static const colorAvatar = Color(0xFFDE5E5E);
   static const colorFocusButton = Color(0x14818C99);
   static const colorBorderEmailAddressInvalid = Color(0xFFFF3347);
+  static const colorBorderIdentityInfo = Color(0xFFE7E8EC);
   static const colorBgMailboxSelected = Color(0xFF99E4E8EC);
   static const colorLoading = Color(0x2999A2AD);
   static const colorActionButtonHover = Color(0xFFA2AAB3);
+  static const colorBgMenuItemDropDownSelected = Color(0x80DEE2E7);
+  static const colorButtonCancelDialog = Color(0x0D000000);
 
   static const mapGradientColor = [
     [Color(0xFF21D4FD), Color(0xFFB721FF)],
